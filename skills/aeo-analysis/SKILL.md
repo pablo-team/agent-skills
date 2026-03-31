@@ -159,7 +159,7 @@ pablo aeo overview --range 7d
 pablo aeo competitors --range 7d
 ```
 
-**Visibility breakdown by platform and topic:**
+**Visibility breakdown by platform & topic:**
 ```bash
 pablo aeo visibility --range 7d
 ```
