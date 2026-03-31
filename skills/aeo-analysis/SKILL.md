@@ -151,6 +151,7 @@ Once status is `completed`, fetch and present all three views:
 
 **Overall visibility and KPIs:**
 ```bash
+# query overview
 pablo aeo overview --range 7d
 ```
 
