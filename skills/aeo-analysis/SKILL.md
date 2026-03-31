@@ -1,6 +1,11 @@
 ---
 name: aeo-analysis
 description: Measure a brand's visibility on AI search engines using the pablo CLI. Input is a website URL.
+license: Proprietary
+compatibility: Underlying environment must have `pablo` cli installed.
+metadata:
+    author: "Pablo Dev Team"
+    version: "1.0"
 ---
 
 # AEO Measurement Skill
