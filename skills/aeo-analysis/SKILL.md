@@ -5,7 +5,7 @@ license: Proprietary
 compatibility: Underlying environment must have `pablo` cli installed.
 metadata:
     author: "Pablo Dev Team"
-    version: "2.0"
+    version: "1.0"
 ---
 
 ## Step 1 — Analyze the Website
