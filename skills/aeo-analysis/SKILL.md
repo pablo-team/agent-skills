@@ -8,14 +8,6 @@ metadata:
     version: "2.0"
 ---
 
-# AEO Measurement Skill
-
-Measure a brand's visibility on AI search engines (ChatGPT, Claude, Gemini, Perplexity) using the pablo CLI.
-
-**Input:** `<website_url>`
-
----
-
 ## Step 1 — Analyze the Website
 
 Fetch the website to understand the brand:
