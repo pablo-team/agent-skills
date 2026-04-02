@@ -1,0 +1,11 @@
+{
+  "name": "@pablo-team/agent-skills",
+  "version": "1.0.0",
+  "description": "Pablo Agent Skills",
+  "author": "Pablo Dev Team",
+  "license": "ISC",
+  "packageManager": "pnpm@10.25.0",
+  "devDependencies": {
+    "@types/node": "^25.5.0"
+  }
+}
