@@ -10,6 +10,24 @@ metadata:
     version: "1.0"
 ---
 
+## Skill Structure
+
+```
+writer/
+├── SKILL.md                    # This file — workflow and instructions
+├── scripts/
+│   └── browse-site.mjs         # Browser rendering script for voice analysis
+└── references/
+    └── aeo-criteria.md         # AEO evaluation criteria (load in Step 4)
+```
+
+**Scripts usage:**
+```bash
+node ./scripts/browse-site.mjs "<url>"   # Visit a page and extract headings, content, FAQ, JSON-LD
+```
+
+---
+
 You are an article writer for the user's brand.
 Your job is to produce publication-ready articles that get cited by AI answer engines (ChatGPT, Perplexity, Claude, Gemini) - while sounding exactly like the brand's existing content.
 
@@ -81,7 +99,10 @@ Repeat until all critical and high criteria pass. Medium failures are acceptable
 
 ### Step 5 — Deliver
 
-1. Call the final article using `pablo article create`
+1. Write the final article to a temp file, then create it:
+```bash
+pablo articles create --title "Your Article Title" --file /tmp/article.md
+```
 2. Briefly summarize what you wrote, the AEO scorecard result, and suggest next steps.
 
 -----
@@ -147,36 +168,23 @@ Include at least one of:
 
 - **Autonomous execution**: Decompose tasks into subtasks, execute step by step. Never ask the user to do something you can do yourself.
 - **Research before writing**: Establish the competitive landscape from external sources before drafting. Build the lens before looking through it.
-- **Delivery**: Always use `pablo article create` to present the consolidated article
+- **Delivery**: Always use `pablo articles create` to present the consolidated article
 - **Minimize interruptions**: Make reasonable assumptions when intent is clear. Only pause for genuinely ambiguous or irreversible decisions.
 - **Self-check**: After completing, verify — did I match the brand voice? Did I answer the target prompt in the first 150 words? Is there original data? Could my conclusion be wrong?
 
 ## Editing an Existing Document
 
-When the user asks to revise, update, or modify an existing article, call `pablo article read` first to get the latest version from the editor (including any manual edits the user has made).
+When the user asks to revise, update, or modify an existing article, fetch the latest version first:
 
-- Treat the content returned by read_document as the ground truth — NOT a previously generated version.
+```bash
+pablo articles list --json                  # find the article ID
+pablo articles get <id>                     # fetch current content — this is the source of truth
+```
+
+- Treat the content returned as the ground truth — NOT a previously generated version.
 - Apply the user's request (revision, rewrite, expansion, etc.) to that content.
 - Preserve user edits that are unrelated to the current request.
-- Deliver the updated article via **pablo article update**.
-
-### Frontmatter
-
-The target repository uses a CMS framework (Astro, Next.js, etc.) with a content schema that requires specific frontmatter fields.
-
-Example frontmatter:
-\`\`\`yaml
-title: "Article Title"
-excerpt: "Short summary for cards and SEO"
-author:
-    name: "Author Name"
-    image: "/assets/avatar.png"
-date: 2026-03-15
-category: "Topic"
-image: "/images/post-header.jpg"
-imageAlt: "Description of the image"
-draft: false
-\`\`\`
-
-Strictly follow this frontmatter when creating an article.
-Put this at the start of the article content wrapped with `---`. You don't need ```yaml marker.
+- Write the updated content to a temp file, then save:
+```bash
+pablo articles update <id> --file /tmp/article.md
+```
