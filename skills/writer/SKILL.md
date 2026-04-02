@@ -166,18 +166,17 @@ The target repository uses a CMS framework (Astro, Next.js, etc.) with a content
 
 Example frontmatter:
 \`\`\`yaml
----
 title: "Article Title"
 excerpt: "Short summary for cards and SEO"
 author:
-name: "Author Name"
-image: "/assets/avatar.png"
+    name: "Author Name"
+    image: "/assets/avatar.png"
 date: 2026-03-15
 category: "Topic"
 image: "/images/post-header.jpg"
 imageAlt: "Description of the image"
 draft: false
----
 \`\`\`
 
 Strictly follow this frontmatter when creating an article.
+Put the at the start of the article content wrapped with `---`. You don't need ```yaml marker.
