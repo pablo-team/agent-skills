@@ -71,8 +71,8 @@ Generate 1–2 images for the article using **generate-image script**:
 
 ### Step 4 — Evaluate & Revise
 
-Read `references/aeo-criteria.md` and evaluate your draft against each criterion.
-State the target prompt first, then score every criterion ✅ or ❌ with a brief reason.
+Read `./references/aeo-criteria.md` next to this skill file and evaluate your draft against each criterion.
+State the target prompt first, then score every criterion **PASS** or **FAILED** with a brief reason.
 
 If any critical or high criterion fails → revise the draft and re-evaluate.
 Repeat until all critical and high criteria pass. Medium failures are acceptable when the brand's voice demands it (e.g. the brand never uses FAQ sections).
