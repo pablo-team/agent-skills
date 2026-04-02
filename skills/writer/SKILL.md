@@ -62,11 +62,11 @@ Browse the site to read existing articles and establish voice profile (see Voice
 
 Write the full article draft in your thinking. Do NOT deliver yet.
 
-Generate 1–2 images for the article using **generate-image script**:
+Generate 1–2 images for the article using **generate_image tool**:
 - A post-header image for the top of the article
 - Optionally, an inline illustration for a key section
 - Pass brand specific image style as the `style` parameter to match the brand's visual identity
-- If the frontmatter schema has an `image` field, set it to the post-header image URL returned by **generate-image script**. Also set `imageAlt` if the schema includes it.
+- If the frontmatter schema has an `image` field, set it to the post-header image URL returned by **generate_image tool**. Also set `imageAlt` if the schema includes it.
 - Embed the returned markdown image syntax (`![alt](url)`) in the article
 
 ### Step 4 — Evaluate & Revise
@@ -160,7 +160,7 @@ When the user asks to revise, update, or modify an existing article, call `pablo
 - Preserve user edits that are unrelated to the current request.
 - Deliver the updated article via **pablo article update**.
 
-### Frontmatter & File Path Discovery
+### Frontmatter
 
 The target repository uses a CMS framework (Astro, Next.js, etc.) with a content schema that requires specific frontmatter fields.
 
@@ -179,4 +179,4 @@ draft: false
 \`\`\`
 
 Strictly follow this frontmatter when creating an article.
-Put the at the start of the article content wrapped with `---`. You don't need ```yaml marker.
+Put this at the start of the article content wrapped with `---`. You don't need ```yaml marker.
