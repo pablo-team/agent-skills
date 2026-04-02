@@ -16,14 +16,14 @@ metadata:
 writer/
 ├── SKILL.md                    # This file — workflow and instructions
 ├── scripts/
-│   └── browse-site.mjs         # Browser rendering script for voice analysis
+│   └── browse-page.mjs         # Browser rendering script for voice analysis
 └── references/
     └── aeo-criteria.md         # AEO evaluation criteria (load in Step 4)
 ```
 
 **Scripts usage:**
 ```bash
-node ./scripts/browse-site.mjs "<url>"   # Visit a page and extract headings, content, FAQ, JSON-LD
+node ./scripts/browse-page.mjs "<url>"   # Visit a page and extract headings, content, FAQ, JSON-LD
 ```
 
 ---
@@ -40,8 +40,8 @@ Every brand sounds different. Before writing any article, you MUST establish the
 
 ### How to establish voice:
 
-1. **Browse the blog index** — use **browse-page script** on `{site_url}/blog` (or the most likely blog path). Identify 2–3 recent articles from the headings and links.
-2. **Read 2–3 articles** — use **browse-page** on each article page. While reading, extract:
+1. **Browse the blog index** — run `node ./scripts/browse-page.mjs "{site_url}/blog"` (or the most likely blog path). Identify 2–3 recent articles from the headings and links.
+2. **Read 2–3 articles** — run `node ./scripts/browse-page.mjs "<article_url>"` on each. While reading, extract:
     - **Sentence rhythm**: Short and punchy? Long and flowing? Mixed?
     - **Perspective**: First-person plural ("we")? Second-person ("you")? Third-person neutral?
     - **Formality**: Casual/conversational? Professional? Academic?
@@ -67,16 +67,31 @@ Every brand sounds different. Before writing any article, you MUST establish the
 
 ## Article Creation Workflow
 
-### Step 1 — Voice (skip if already established in this session)
+### Step 1 — Load project context
+
+```bash
+pablo project info --json       # brand name, site URL
+pablo aeo runs list             # find the latest completed run ID
+pablo aeo runs get <id>         # topic insights + evidence prompts
+pablo aeo brands list --json    # own brand + competitors
+```
+
+**Project info** — brand name and site URL used to browse the blog and frame the article voice
+**Latest AEO Run** — topic insights (visibility gaps, per-topic summaries) and top evidence prompts (which AI prompts the brand is missing from) — used to pick the target prompt and article angle
+**Brands list** — identifies the own brand and competitors to know whose visibility gap the article should close
+
+If no completed run exists, skip the AEO context and proceed with brand info only.
+
+### Step 2 — Voice (skip if already established in this session)
 
 Browse the site to read existing articles and establish voice profile (see Voice & Tone above).
 
-### Step 2 — Research
+### Step 3 — Research
 
 1. **Refresh AEO knowledge** — web search for the latest AEO/GEO best practices ("AEO article optimization best practices 2026", "how to get cited by AI answer engines"). Note any new patterns or citation preferences that go beyond the built-in criteria.
 2. **Research the topic** — web search for competitive landscape, current discourse, authoritative data.
 
-### Step 3 — Write & Illustrate
+### Step 4 — Write & Illustrate
 
 Write the full article draft in your thinking. Do NOT deliver yet.
 
@@ -87,7 +102,7 @@ Generate 1–2 images for the article using **generate_image tool**:
 - If the frontmatter schema has an `image` field, set it to the post-header image URL returned by **generate_image tool**. Also set `imageAlt` if the schema includes it.
 - Embed the returned markdown image syntax (`![alt](url)`) in the article
 
-### Step 4 — Evaluate & Revise
+### Step 5 — Evaluate & Revise
 
 Read `./references/aeo-criteria.md` next to this skill file and evaluate your draft against each criterion.
 State the target prompt first, then score every criterion **PASS** or **FAILED** with a brief reason.
@@ -97,7 +112,7 @@ Repeat until all critical and high criteria pass. Medium failures are acceptable
 
 *Note: target prompt = The primary AI prompt this article is designed to answer.*
 
-### Step 5 — Deliver
+### Step 6 — Deliver
 
 1. Write the final article to a temp file, then create it:
 ```bash
