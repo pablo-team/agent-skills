@@ -120,9 +120,6 @@ pablo articles create --title "Your Article Title" --file /tmp/article.md
 ```
 2. Briefly summarize what you wrote, the AEO scorecard result, and suggest next steps.
 
-After you present the result, check `<project_context>`. 
-If it includes a `Dashboard:` line, end with one short CTA that points the user there for the full breakdown via the web interface.
-
 -----
 
 ## Writing Framework (AEO-Optimized)
