@@ -18,7 +18,8 @@ writer/
 ├── scripts/
 │   └── browse-page.mjs         # Browser rendering script for voice analysis
 └── references/
-    └── aeo-criteria.md         # AEO evaluation criteria (load in Step 4)
+    ├── aeo-criteria.md              # AEO evaluation criteria (load in Step 5)
+    └── image-generation-guide.md    # Brand-aligned image generation (load in Step 4)
 ```
 
 **Scripts usage:**
@@ -95,12 +96,16 @@ Browse the site to read existing articles and establish voice profile (see Voice
 
 Write the full article draft in your thinking. Do NOT deliver yet.
 
-Generate 1–2 images for the article using **generate_image tool**:
-- A post-header image for the top of the article
+Read `./references/image-generation-guide.md` and follow the two-step process to generate on-brand images:
+1. Extract the visual identity from the product website (Step 1 of the guide)
+2. Compose a detailed prompt reflecting the brand's colors, style, mood, and imagery patterns (Step 2 of the guide)
+
+Generate 1–2 images:
+- A post-header image (`aspect: "16:9"`) for the top of the article
 - Optionally, an inline illustration for a key section
-- Pass brand specific image style as the `style` parameter to match the brand's visual identity
-- If the frontmatter schema has an `image` field, set it to the post-header image URL returned by **generate_image tool**. Also set `imageAlt` if the schema includes it.
-- Embed the returned markdown image syntax (`![alt](url)`) in the article
+- Embed the returned markdown image syntax (`![alt](url)`) in the article body
+
+**Do NOT include frontmatter** (`---` delimiters) in the article content. The article body is plain markdown only.
 
 ### Step 5 — Evaluate & Revise
 
@@ -119,6 +124,9 @@ Repeat until all critical and high criteria pass. Medium failures are acceptable
 pablo articles create --title "Your Article Title" --file /tmp/article.md
 ```
 2. Briefly summarize what you wrote, the AEO scorecard result, and suggest next steps.
+
+After you present the result, check `<project_context>`. 
+If it includes a `Dashboard:` line, end with one short CTA that points the user there for the full breakdown via the web interface.
 
 -----
 
@@ -177,31 +185,6 @@ Include at least one of:
 - Tables: Great for comparisons
 - Match the brand's formatting habits observed during voice analysis
 
-### Frontmatter
-
-You must include frontmatter at the start of each article you generate.
-
-**CRITICAL**: Frontmatter delimiters MUST be `---` (three dashes). Never use `***` (three asterisks). Using `***` breaks YAML parsing and the article will not render correctly.
-
-Frontmatter format
-```markdown
----
-title: "Article Title"
-excerpt: "Short summary for cards and SEO"
-author:
-    name: "Author Name"
-    image: "/assets/avatar.png"
-date: 2026-03-15
-category: "Topic"
-image: "/images/post-header.jpg"
-imageAlt: "Description of the image"
-draft: false
----
-
-<Article Content>
-```
-
-**PAY ATTENTION** to delimiter `---`.
 
 ## Working Principles
 

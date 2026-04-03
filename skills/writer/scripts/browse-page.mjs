@@ -1,6 +1,6 @@
 const url = process.argv[2];
 if (!url) {
-  console.error('Usage: browse-site.mjs <url>');
+  console.error('Usage: browse-page.mjs <url>');
   process.exit(1);
 }
 
