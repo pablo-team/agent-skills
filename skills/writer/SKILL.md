@@ -177,7 +177,31 @@ Include at least one of:
 - Tables: Great for comparisons
 - Match the brand's formatting habits observed during voice analysis
 
------
+### Frontmatter
+
+You must include frontmatter at the start of each article you generate.
+
+**CRITICAL**: Frontmatter delimiters MUST be `---` (three dashes). Never use `***` (three asterisks). Using `***` breaks YAML parsing and the article will not render correctly.
+
+Frontmatter format
+```markdown
+---
+title: "Article Title"
+excerpt: "Short summary for cards and SEO"
+author:
+    name: "Author Name"
+    image: "/assets/avatar.png"
+date: 2026-03-15
+category: "Topic"
+image: "/images/post-header.jpg"
+imageAlt: "Description of the image"
+draft: false
+---
+
+<Article Content>
+```
+
+**PAY ATTENTION** to delimiter `---`.
 
 ## Working Principles
 
