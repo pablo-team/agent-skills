@@ -5,193 +5,81 @@ license: Proprietary
 compatibility: Underlying environment must have `pablo` cli installed.
 metadata:
   author: "Pablo Dev Team"
-  version: "1.0"
+  version: "2.0"
 ---
 
-## About Pablo CLI
+## Rules
 
-Pablo is a CLI tool for measuring a brand's visibility on AI answer engines (ChatGPT, Perplexity, Gemini, etc.). Everything lives inside a single **project** — a shared workspace that holds all the resources for one brand's AEO tracking.
+These apply at all times, regardless of what you're doing.
 
-The core resources within a project are:
-
-- **Topics** — the business categories to track (e.g., "Project Management Tools"). Topics scope what the analysis covers.
-- **Brands** — the own brand and its competitors. The own brand is flagged with `--own`; all others are treated as benchmarks.
-- **Prompts** — natural-language questions sent to each AI engine, grouped by topic. These drive the actual queries.
-- **Runs** — an analysis execution. Triggering a run sends all prompts to all configured AI engines and collects visibility data.
-- **Results** — aggregated metrics accessible via `pablo aeo overview`, `pablo aeo competitors`, and `pablo aeo visibility`.
-
-**Important:** The project always has a current state. Even if the user hasn't said anything yet, always start by querying the CLI to understand what's already configured before deciding what to do next.
+1. **Check before creating** — always query existing state (`topics list`, `brands list`, `prompts list`) before creating any resource. Skip what already exists.
+2. **Present before acting** — never create topics, brands, or prompts without first presenting your plan to the user and getting explicit approval. This is non-negotiable.
+3. **One approval per resource type** — present all topics together, get approval. Then all brands together, get approval. Then prompts. Don't batch everything into one giant list, and don't drip-feed one at a time.
+4. **Respect corrections** — when the user modifies your plan (adds, removes, renames), apply the changes and confirm the final list before creating.
 
 ---
 
-## How to Use This Skill
+## Context
 
-Determine the user's intent first, then route to the appropriate mode.
+Pablo measures a brand's visibility on AI answer engines (ChatGPT, Perplexity, Gemini, etc.). Everything is organized inside a **project** — a workspace that holds all resources for one brand's AEO tracking.
 
-| Intent | Mode |
-|--------|------|
-| User provides a URL or wants to set up a new project | **Mode A — Full Setup Pipeline** |
-| User asks about existing runs, metrics, or visibility | **Mode B — Query** |
-| User wants to add, remove, or edit topics / brands / prompts | **Mode C — Modify** |
+**Resource hierarchy:**
 
----
+```
+Project
+├── Topics          — SEO like topic / business categories to track (e.g., "Project Management Tools")
+├── Brands          — the own brand (flagged --own) + competitors
+├── Prompts         — questions sent to AI engines, grouped by topic
+├── Runs            — analysis executions that query all engines
+└── Results         — aggregated metrics (overview, competitors, visibility)
+```
 
-## Mode A — Full Setup Pipeline
-
-For new or empty projects. Follow steps in order. Never skip a confirmation gate.
-
-### A1 — Understand the Business
-
-1. Use WebFetch on the provided URL — read the homepage and any linked About, Products, or Services pages
-2. Extract the brand name, domain, and enough context to summarize the business
-
-**→ Confirm with user — hard stop**
-
-Present findings in this format:
-
-**Business:** [what they do, market fit, product direction]
-**Target Audience:** [who they serve]
-
-Then surface only the competitive positioning dimensions that are meaningful for this business:
-- **Scope** — regional or global
-- **Segment** — freelancers / startups / SMB / enterprise
-- **Model** — SaaS / marketplace / agency / other
-- **Positioning** — budget / mid-market / premium
-- **Niche** — broad category player or specialized
-- **Differentiator** — the core reason customers choose them
-
-Omit any dimension that is unclear or irrelevant. Ask:
-> "Does this accurately describe your business? Anything to add or correct?"
-
-Wait for confirmation. Incorporate any corrections. Do not proceed until confirmed.
+A run sends every prompt to every configured AI engine, then checks whether each brand was mentioned in the responses. The results surface which brands are visible for which topics on which platforms.
 
 ---
 
-### A2 — Check Existing Setup
+## CLI Reference
 
-Before creating anything, check what's already configured:
+### Project
+
+```bash
+pablo project info --json            # brand name, site URL, config
+```
+
+### Topics
 
 ```bash
 pablo aeo topics list --json
-pablo aeo brands list --json
-pablo aeo prompts list --json
-```
-
-Skip any step where the data is already populated. Only create what's missing.
-
----
-
-### A3 — Create Topics
-
-Topics define the business areas where you want to measure AI visibility.
-
-**How to generate topics:**
-- Generate 3–5 topics based on the business analysis from A1
-- Each topic must be 3–5 words — short, clear, and category-like
-- Think like SEO categories or things people would type into an AI assistant
-- Do NOT mention the brand name
-- Be industry-specific and include enough context so the topic is unambiguous
-    - Bad: "Flexible Day Passes" (could be gym, museum, transit, etc.)
-    - Good: "Coworking Day Passes" (clearly about workspaces)
-- Cover both informational and transactional intent where possible
-
-**Examples by business type:**
-- Project management SaaS → "Project Management Tools", "Team Collaboration Software", "Agile Workflow Tools"
-- Restaurant reservation app → "Restaurant Booking Apps", "Fine Dining Reservations", "Last Minute Dinner Booking"
-- No-code site builder → "No-Code Site Builder", "Custom Domain Hosting", "User-Friendly Design Tools"
-
-Create each topic:
-```bash
 pablo aeo topics create "<Topic Name>"
+pablo aeo topics delete <topicId>
 ```
 
-**→ Confirm with user — hard stop**
-
-List the topics you created and ask:
-> "Do these cover the areas where you want to track your AI visibility? Want to add, remove, or rename any?"
-
-Wait for confirmation. Adjust using `pablo aeo topics create` or `pablo aeo topics delete`. Do not proceed until confirmed.
-
----
-
-### A4 — Create Brands & Competitors
-
-Brands define whose mentions to track and compare against.
-
-**Add your own brand first:**
-```bash
-pablo aeo brands create "<BrandName>" --domain <yourdomain.com> --own
-```
-
-**Identify competitors via web search:**
-
-For each topic from A3, use WebSearch to find who appears in real results. Use queries like:
-- "best [topic]"
-- "top [topic] tools / apps / platforms"
-- "alternatives to [brand name]"
-
-Across all topic searches, extract the brand/company names that appear most consistently. Prioritize competitors that show up across multiple topics. Filter out blogs, directories, and news sites — focus on actual product or service competitors. Aim for 3–5.
-
-Create each competitor:
-```bash
-pablo aeo brands create "<CompetitorName>" --domain <competitor.com>
-```
-
-**→ Confirm with user — hard stop**
-
-Present the competitor list. For each competitor, briefly explain why you selected them — which topics they appeared in and how frequently. Ask:
-> "Are these the right competitors to benchmark against? Any to add, remove, or swap?"
-
-Wait for confirmation. Adjust as needed. Do not proceed until confirmed.
-
----
-
-### A5 — Create Prompts
-
-Prompts are the natural-language questions sent to each AI engine. Create 3 per topic.
-
-Get topic IDs:
-```bash
-pablo aeo topics list --json
-```
-
-For each topic, write prompts that:
-- Sound like genuine questions a user would ask an AI assistant
-- Do **not** mention the brand by name
-- Are relevant to the topic
-- Could naturally lead to a good answer that mentions the brand
+### Brands
 
 ```bash
-pablo aeo prompts create <topicId> "<Natural language question>"
+pablo aeo brands list --json
+pablo aeo brands create "<Name>" --domain <domain.com> --own    # own brand
+pablo aeo brands create "<Name>" --domain <domain.com>          # competitor
+pablo aeo brands delete <brandId>
 ```
 
-**Example** for "Project Management Software":
-```bash
-pablo aeo prompts create topic_abc "What are the best project management tools for remote teams?"
-pablo aeo prompts create topic_abc "How do I choose project management software for a 50-person company?"
-pablo aeo prompts create topic_abc "Which project management platforms integrate best with Slack and GitHub?"
-```
-
-Verify: `pablo aeo prompts list --json`
-
----
-
-### A6 — Trigger & Monitor Analysis
+### Prompts
 
 ```bash
-pablo aeo runs trigger --json
+pablo aeo prompts list --json
+pablo aeo prompts create <topicId> "<Question>"
+pablo aeo prompts delete <promptId>
 ```
 
-Note the `runId` from the response. Do a single status check:
+### Runs
+
 ```bash
-pablo aeo runs get <runId> --json
+pablo aeo runs list                  # find latest run
+pablo aeo runs get <runId>           # detailed run data
+pablo aeo runs trigger --json        # start a new analysis
 ```
 
-Inform the user of the current status and let them know it will take around 5–10 minutes to complete. Move on to A7 once they confirm it's done.
-
----
-
-### A7 — View Results
+### Results
 
 ```bash
 pablo aeo overview --range 7d
@@ -199,62 +87,98 @@ pablo aeo competitors --range 7d
 pablo aeo visibility --range 7d
 ```
 
-**→ Present to user**
+---
 
-Summarize key findings:
-- Overall visibility score and mention rate
-- Which AI platforms mention the brand most
-- How the brand ranks vs each competitor
-- Which topics drive the most (and least) visibility
-- Suggested next steps based on gaps (e.g., low visibility on a platform → review prompt coverage; competitor outranking on a topic → consider content for that area)
+## Workflow: Setting Up a New Project
+
+When the user provides a URL or wants to start fresh, work through these phases. Each phase ends with user approval before the next begins.
+
+### 1. Understand the business
+
+Fetch the site (homepage + about/product pages). Synthesize:
+
+- **Business** — what they do, market fit, product direction
+- **Target audience** — who they serve
+- **Competitive positioning** — only the dimensions that are meaningful:
+  scope (regional/global), segment (freelancer/SMB/enterprise), model (SaaS/marketplace/agency), positioning (budget/mid/premium), niche, differentiator
+
+Present your findings. Wait for the user to confirm or correct before moving on.
+
+### 2. Topics
+
+Generate 3–5 topics based on the business analysis.
+
+**Good topics are:**
+- 3–5 words, short and category-like
+- Industry-specific with enough context to be unambiguous
+- A mix of informational and transactional intent where possible
+- Never mention the brand name
+
+**Bad:** "Flexible Day Passes" (gym? museum? transit?)
+**Good:** "Coworking Day Passes" (clearly workspaces)
+
+**Examples:**
+- Project management SaaS → "Project Management Tools", "Team Collaboration Software", "Agile Workflow Tools"
+- Restaurant reservation app → "Restaurant Booking Apps", "Fine Dining Reservations", "Last Minute Dinner Booking"
+
+Present the proposed topics with brief reasoning. Wait for approval, then create.
+
+### 3. Brands & Competitors
+
+Add the own brand first (`--own` flag).
+
+Find competitors by web-searching across the topics from step 2:
+- "best [topic]", "top [topic] tools", "alternatives to [brand]"
+- Pick 3–5 actual product/service competitors that appear across multiple topics
+- Filter out blogs, directories, and news sites
+
+Present each competitor with a brief rationale (which topics they appeared in, why they're relevant). Wait for approval, then create.
+
+### 4. Prompts
+
+Create 3 prompts per topic — natural-language questions that:
+- Sound like what a real person would ask an AI assistant
+- Are relevant to the topic
+- Do not mention the brand by name
+
+**Example** for "Project Management Tools":
+- "What are the best project management tools for remote teams?"
+- "How do I choose project management software for a 50-person company?"
+- "Which project management platforms integrate best with Slack and GitHub?"
+
+Create prompts after topics and brands are confirmed. These don't need a separate confirmation gate — they follow directly from the approved topics.
+
+### 5. Run the analysis
+
+Trigger a run and inform the user it takes around 5–10 minutes. Once the run completes, present results (see below).
 
 ---
 
-## Mode B — Query
+## Workflow: Viewing Results
 
-For when the user asks about existing runs, results, or visibility. No setup needed.
+When the user asks about existing data, visibility, or comparisons — fetch the relevant results and summarize.
 
-**"What's the latest analysis?" / "Show me the results"**
-1. `pablo aeo runs list --json` — find the most recent completed run
-2. Fetch overview, competitors, and visibility with `--range 7d`
-3. Summarize as in A7
+Pull from three views:
+- `overview` — overall visibility score and mention rate
+- `competitors` — brand vs. competitor ranking
+- `visibility` — per-topic, per-platform breakdown
 
-**"How is my visibility?" / "How am I doing?"**
-- Fetch `pablo aeo overview --range 7d` and `pablo aeo visibility --range 7d`
-- Summarize visibility score, top platforms, and strongest/weakest topics
+Summarize with:
+- Overall visibility score and trend
+- Which AI platforms mention the brand most/least
+- How the brand ranks against each competitor
+- Strongest and weakest topics
+- Actionable next steps based on the gaps (e.g., low visibility on a platform → content opportunity, competitor outranking on a topic → area to strengthen)
 
-**"How do I compare to [competitor]?"**
-- Fetch `pablo aeo competitors --range 7d`
-- Focus the summary on that specific competitor's position relative to the brand
+After presenting the summary, check `<project_context>`. If it includes a `Dashboard:` line, end with a short CTA that includes the dashboard URL so the user can see the full breakdown.
 
 ---
 
-## Mode C — Modify
+## Workflow: Modifying Configuration
 
-For when the user wants to change existing configuration without running the full pipeline.
+When the user wants to add, remove, or adjust topics, brands, or prompts:
 
-Always list current state before making any changes.
-
-**Topics**
-```bash
-pablo aeo topics list --json
-pablo aeo topics create "<Topic Name>"
-pablo aeo topics delete <topicId>
-```
-
-**Brands / Competitors**
-```bash
-pablo aeo brands list --json
-pablo aeo brands create "<BrandName>" --domain <domain.com>
-pablo aeo brands create "<BrandName>" --domain <domain.com> --own
-pablo aeo brands delete <brandId>
-```
-
-**Prompts**
-```bash
-pablo aeo prompts list --json
-pablo aeo prompts create <topicId> "<Question>"
-pablo aeo prompts delete <promptId>
-```
-
-After any modification, confirm the updated state with the user and ask if they'd like to trigger a new analysis run.
+1. List the current state of the resource being changed
+2. Discuss what to change
+3. Apply the changes
+4. Ask if they'd like to trigger a new analysis run with the updated configuration
