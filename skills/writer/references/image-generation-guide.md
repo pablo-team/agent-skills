@@ -95,7 +95,11 @@ No text or words in the image.
 - Match the existing imagery on the site, don't invent a new style
 - If no visual identity can be extracted, use: `Modern, clean digital illustration with a professional aesthetic`
 
-### Tool call
+### Generating the image
+
+**Option 1 — Direct `generate_image` tool (preferred)**
+
+If your environment provides a `generate_image` tool, use it directly:
 
 ```
 generate_image({
@@ -105,4 +109,10 @@ generate_image({
 })
 ```
 
-The tool returns `{ url }` — use this URL in the article markdown: `![alt text](url)`.
+**Option 2 — Pablo CLI (fallback)**
+
+```bash
+pablo articles generate-image --prompt "<assembled prompt>" --filename "post-header.png" --aspect "16:9"
+```
+
+Both return a public URL. Use it in the article markdown: `![alt text](url)`.
