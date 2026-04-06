@@ -30,7 +30,3 @@ Write, edit, and publish AEO-optimized articles. The agent analyzes your existin
 
 - A Pablo account — sign up at [pablo.computer](https://pablo.computer)
 - The Pablo CLI installed and authenticated (`pablo login`)
-
-## License
-
-Proprietary
