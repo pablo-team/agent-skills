@@ -6,13 +6,13 @@ Generate on-brand images by extracting the visual identity from the product webs
 
 Analyze the product website's key pages to build a visual profile. Focus on the landing page and any pages with rich imagery.
 
-**Use two tools together:**
+**Use two approaches together:**
 
-1. **screenshot** tool — take screenshots of key pages to visually assess colors, style, mood, imagery, and overall design language. This is the primary source for visual identity extraction.
+1. **Screenshot** — take screenshots of key pages to visually assess colors, style, mood, imagery, and overall design language. This is the primary source for visual identity extraction. See `./references/screenshot-guide.md` for setup and usage.
    - `{site_url}` — Landing page (most important)
    - `{site_url}/about` or other visually rich pages
 
-2. **webfetch** tool — fetch page HTML to extract exact CSS color values, font families, meta tags, and OG images as supporting data.
+2. **webfetch** — fetch page HTML to extract exact CSS color values, font families, meta tags, and OG images as supporting data.
 
 *Note: You can always take multiple screenshots if necessary, given different selectors. Avoid taking a lot of screenshots.*
 

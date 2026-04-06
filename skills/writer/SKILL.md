@@ -16,16 +16,21 @@ metadata:
 writer/
 ├── SKILL.md                    # This file — workflow and instructions
 ├── scripts/
-│   └── browse-page.mjs         # Browser rendering script for voice analysis
+│   ├── browse-page.mjs         # Fetch and parse page metadata, headings, content
+│   └── screenshot.mjs          # Capture page screenshots via Puppeteer
 └── references/
     ├── aeo-criteria.md              # AEO evaluation criteria (load in Step 5)
-    └── image-generation-guide.md    # Brand-aligned image generation (load in Step 4)
+    ├── image-generation-guide.md    # Brand-aligned image generation (load in Step 4)
+    └── screenshot-guide.md          # Screenshot setup and usage (load in Step 4)
 ```
 
 **Scripts usage:**
 ```bash
-node ./scripts/browse-page.mjs "<url>"   # Visit a page and extract headings, content, FAQ, JSON-LD
+node ./scripts/browse-page.mjs "<url>"                              # Extract headings, content, FAQ, JSON-LD
+node ./scripts/screenshot.mjs "<url>" [selector] [width] [output]   # Capture page screenshot to file
 ```
+
+If you have built-in screenshot tool, just use that tool. Don't have to use script.
 
 ---
 
