@@ -28,5 +28,14 @@ Write, edit, and publish AEO-optimized articles. The agent analyzes your existin
 
 ## Prerequisites
 
-- A Pablo account — sign up at [pablo.computer](https://pablo.computer)
-- The Pablo CLI installed and authenticated (`pablo login`)
+1. A Pablo account — sign up at [https://pablo.computer](https://pablo.computer)
+2. Install the Pablo CLI:
+   ```
+   curl -fsSL https://agent.pablo.computer/install.sh | sh
+   ```
+3. Authenticate:
+   ```
+   pablo login
+   ```
+
+See [pablo-team/pablo-cli](https://github.com/pablo-team/pablo-cli) for full documentation.
