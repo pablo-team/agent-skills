@@ -89,6 +89,19 @@ pablo aeo visibility --range 7d
 
 ---
 
+## Workflow: Select a Project
+
+Most commands rely on a default project. Before doing anything else, ensure one is set.
+
+1. Run `pablo project list --json` to show available projects.
+2. If there are multiple projects, ask the user which one to use.
+3. Set the chosen project as default: `pablo config set project <id>`
+4. Confirm with `pablo project info` to verify the active project.
+
+If no projects exist, the user needs to create one from the Pablo dashboard first.
+
+---
+
 ## Workflow: Setting Up a New Project
 
 When the user provides a URL or wants to start fresh, work through these phases. Each phase ends with user approval before the next begins.
